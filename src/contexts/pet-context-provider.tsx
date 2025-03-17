@@ -1,6 +1,6 @@
 "use client";
 
-import { Pet } from "@/lib/types";
+import { NewPet, Pet } from "@/lib/types";
 import { createContext, useState } from "react";
 
 type PetContextProviderProps = {
@@ -15,6 +15,8 @@ type TPetContext = {
   numberOfPets: number;
   handleChangeSelectedPetId: (id: string) => void;
   handleCheckoutPet: (id: string) => void;
+  handleAddPet: (pet: NewPet) => void;
+  handleEditPet: (petId: string, newPetData: NewPet) => void;
 };
 
 export const PetContext = createContext<TPetContext | null>(null);
@@ -32,6 +34,23 @@ export default function PetContextProvider({
   const numberOfPets = pets.length;
 
   // event handlers / actions
+
+  const handleAddPet = (newPet: NewPet) => {
+    setPets((prev) => [
+      ...prev,
+      {
+        ...newPet,
+        id: Date.now().toString(),
+      },
+    ]);
+  };
+
+  const handleEditPet = (petId: string, newPetData: NewPet) => {
+    setPets((prev) =>
+      prev.map((pet) => (pet.id === petId ? { id: petId, ...newPetData } : pet))
+    );
+  };
+
   const handleCheckoutPet = (id: string) => {
     setPets((prev) => prev.filter((pet) => pet.id !== id));
     setSelectedPetId(null);
@@ -50,6 +69,8 @@ export default function PetContextProvider({
         numberOfPets,
         handleChangeSelectedPetId,
         handleCheckoutPet,
+        handleAddPet,
+        handleEditPet,
       }}
     >
       {children}

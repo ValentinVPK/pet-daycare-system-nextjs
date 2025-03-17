@@ -1,4 +1,15 @@
+"use client";
+
+import { useState } from "react";
+import PetForm from "./pet-form";
 import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 
 type PetButtonProps = {
   actionType: "add" | "edit" | "checkout";
@@ -11,17 +22,7 @@ export default function PetButton({
   children,
   onClick,
 }: PetButtonProps) {
-  if (actionType === "add") {
-    return <Button size="icon">{children}</Button>;
-  }
-
-  if (actionType === "edit") {
-    return (
-      <Button variant="secondary" className="bg-zinc-200 hover:bg-zinc-300">
-        {children}
-      </Button>
-    );
-  }
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   if (actionType === "checkout") {
     return (
@@ -34,4 +35,29 @@ export default function PetButton({
       </Button>
     );
   }
+
+  return (
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger asChild>
+        {actionType === "add" ? (
+          <Button size="icon">{children}</Button>
+        ) : (
+          <Button variant="secondary" className="bg-zinc-200 hover:bg-zinc-300">
+            {children}
+          </Button>
+        )}
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {actionType === "add" ? "Add a new pet" : "Edit pet"}
+          </DialogTitle>
+        </DialogHeader>
+        <PetForm
+          actionType={actionType}
+          onFormSubmission={() => setIsDialogOpen(false)}
+        />
+      </DialogContent>
+    </Dialog>
+  );
 }
