@@ -13,6 +13,7 @@ import {
 
 type PetButtonProps = {
   actionType: "add" | "edit" | "checkout";
+  disabled?: boolean;
   children: React.ReactNode;
   onClick?: () => void;
 };
@@ -20,6 +21,7 @@ type PetButtonProps = {
 export default function PetButton({
   actionType,
   children,
+  disabled,
   onClick,
 }: PetButtonProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -28,6 +30,7 @@ export default function PetButton({
     return (
       <Button
         variant="secondary"
+        disabled={disabled}
         className="bg-zinc-200 hover:bg-zinc-300"
         onClick={onClick}
       >
