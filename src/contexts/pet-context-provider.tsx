@@ -60,11 +60,13 @@ export default function PetContextProvider({
     startTransition(() => {
       setOptimisticPets({ action: "add", payload: newPet });
     });
-    const error = await addPet(newPet);
-    if (error) {
-      toast.warning(error.message);
+    const result = await addPet(newPet);
+    if (!result.success) {
+      toast.warning(result.message);
       return;
     }
+
+    setSelectedPetId(result.pet.id);
   };
   const handleEditPet = async (petId: string, newPetData: PetEssentials) => {
     startTransition(() => {
